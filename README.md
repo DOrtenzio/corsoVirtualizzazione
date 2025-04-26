@@ -10,6 +10,8 @@
 - [Esercitazione 1: Primi Passi con Docker](#esercitazione-1-primi-passi-con-docker)
 - [Esercitazione 2: Creazione e Gestione di Immagini Docker](#esercitazione-2-creazione-e-gestione-di-immagini-docker)
 - [Esercitazione 3: Networking e Persistenza dei Dati con Docker](#esercitazione-3-networking-e-persistenza-dei-dati-con-docker)
+- [Comandi utili](#comandi-utili)
+- [Conclusioni](#conclusioni)
 
 ---
 
@@ -134,15 +136,31 @@ Questa esercitazione ti introdurrà all'installazione e all'esecuzione dei primi
 3. **Container in Background**:
    - Esegui un container NGINX in background:
      ```bash
-     docker run -d -p 80:80 nginx
+     docker run -d -p 8080:80 nginx
      ```
      - `-d`: Esegue il container in modalità detached (background).
-     - `-p 80:80`: Mappa la porta 80 del container alla porta 80 dell'host.
+     - `-p 8080:80`: Mappa la porta 80 del container alla porta 8080 dell'host.
      - `nginx`: L'immagine da utilizzare.
    - Verifica che il container sia in esecuzione con `docker ps`.
    - Apri un browser sull'host e vai su `http://localhost` per visualizzare la pagina predefinita di NGINX.
    - Visualizza i log del container con `docker logs <ID_DEL_CONTAINER>` (l'ID lo trovi con `docker ps`).
-   > Essendo che lavori su una VM ricorda di mappare le porte anche sull'hypervisor.
+   > Essendo che lavori su una VM ricorda di mappare le porte anche sull'hypervisor. (8080:8080)
+   
+  **Vuoi seguire la vibe?** esegui il comando di prima in modalità interattiva, e modifica la pagina di nginx.
+      ```bash
+      docker run -it -p 8080:80 nginx sh
+      # Dentro la modalità interattiva
+      cd usr/share/nginx/html
+      # Modifica
+      vi index.html
+      ```
+      
+  **NB: Vuoi installare Vi usa:**
+    
+    ```bash
+    apt update
+    apt install vim
+    ```
 
 4. **Gestione del Ciclo di Vita dei Container**:
    - **Creare** un container senza avviarlo: `docker create <immagine>`
@@ -432,4 +450,50 @@ networks:
   - Mappa una cartella qualsiasi dell’host (`/home/user/data`) dentro il container.  
   - Utile in sviluppo (vedi live-reload dei sorgenti), ma meno portable e potenzialmente meno safe (dipende da permessi host).
 ---
+## Comandi Utili
+
+```bash
+# Lista dei container attivi
+docker ps
+
+# Lista di tutti i container (anche fermi)
+docker ps -a
+
+# Avviare un container fermo
+docker start nome_container
+
+# Fermare un container in esecuzione
+docker stop nome_container
+
+# Riavviare un container
+docker restart nome_container
+
+# Cancellare un container fermo
+docker rm nome_container
+
+# Cancellare tutti i container fermi
+docker container prune
+
+# Vedere i log di un container
+docker logs nome_container
+
+# Controllare lo stato dettagliato di un container
+docker inspect nome_container
+
+# Entrare nella shell del container (se bash è disponibile)
+docker exec -it nome_container bash
+
+# Entrare nella shell del container (se solo sh è disponibile)
+docker exec -it nome_container sh
+
+# Eseguire un comando dentro il container
+docker exec nome_container comando
+
+# Creare e avviare un nuovo container in background
+docker run -d --name mio_container nginx
+```
+
+---
+## Conclusioni
+
 Queste tre esercitazioni coprono gli aspetti fondamentali di Docker, partendo dall'esecuzione di container semplici, passando alla creazione di immagini personalizzate e concludendo con la gestione del networking e della persistenza dei dati. Ricorda di consultare la documentazione ufficiale di Docker per approfondire ulteriormente ogni argomento e per i comandi specifici relativi all'installazione e alla configurazione su Alpine Linux.
