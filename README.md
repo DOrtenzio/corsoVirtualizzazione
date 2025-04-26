@@ -156,7 +156,6 @@ Questa esercitazione ti introdurrà all'installazione e all'esecuzione dei primi
       ```
       
   **NB: Vuoi installare Vi usa:**
-    
     ```bash
     apt update
     apt install vim
