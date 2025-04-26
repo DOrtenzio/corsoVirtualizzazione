@@ -13,7 +13,7 @@
 
 ---
 
-## **Cos'è la Containerizzazione?**
+## Cos'è la Containerizzazione?
 La **containerizzazione** è una tecnologia che permette di **creare ambienti isolati** in cui far girare applicazioni. Più precisamente, è una forma di **virtualizzazione a livello di sistema operativo** che consente di **impacchettare un'applicazione insieme a tutto ciò di cui ha bisogno per funzionare**: codice, runtime, librerie, variabili d'ambiente e file di configurazione. Tutto questo viene racchiuso in un'unità chiamata **container**.
 
 A differenza delle tradizionali **macchine virtuali (VM)**, che virtualizzano l'intero hardware e includono un sistema operativo completo, i container **condividono il kernel** del sistema operativo dell'host. Questo li rende **molto più leggeri**, **veloci da avviare** e **meno esigenti in termini di risorse**.
@@ -27,7 +27,7 @@ In pratica, grazie ai container si evita il classico problema del "**funzionava 
 
 ---
 
-## **Breve Storia ed Evoluzione dei Container**
+## Breve Storia ed Evoluzione dei Container
 La containerizzazione ha radici profonde nei sistemi Unix:
 
 - **1979**: La funzionalità **chroot** di Unix introduce un primo concetto di isolamento del filesystem.
@@ -43,7 +43,7 @@ La containerizzazione ha radici profonde nei sistemi Unix:
 
 ---
 
-## **A Cosa Serve Docker?**
+## A Cosa Serve Docker?
 Docker ha rivoluzionato il modo in cui le applicazioni vengono sviluppate, distribuite ed eseguite. I suoi principali vantaggi includono:
 
 - **Consistenza ambientale**: Elimina le differenze tra ambienti, assicurando che l'applicazione funzioni allo stesso modo ovunque.
@@ -55,7 +55,7 @@ Docker ha rivoluzionato il modo in cui le applicazioni vengono sviluppate, distr
 
 ---
 
-## **Componenti Chiave di Docker**
+## Componenti Chiave di Docker
 L'**architettura di Docker** si basa su alcuni elementi chiave che lavorano insieme:
 
 - **Docker Engine**: È il motore principale di Docker, responsabile di creare e gestire container. Include:
@@ -71,7 +71,7 @@ L'**architettura di Docker** si basa su alcuni elementi chiave che lavorano insi
 
 ---
 
-## **Concetti Fondamentali: Immagini e Container**
+## Concetti Fondamentali: Immagini e Container
 
 - **Immagine Docker**: Un **template di sola lettura** con le istruzioni per creare un container. È composta da **layer sovrapposti** (filesystem a strati), dove ogni layer rappresenta un'istruzione nel **Dockerfile** (il file che contiene le istruzioni per costruire l'immagine). Le immagini sono **immutabili** e possono essere basate su altre immagini (ereditarietà). Pensa a un'immagine come a una **classe** in programmazione orientata agli oggetti.
 - **Container Docker**: Un'**istanza eseguibile di un'immagine**. Aggiunge un **layer scrivibile** sopra l'immagine di base. Ha un ciclo di vita ben definito (creazione, avvio, esecuzione, pausa, stop, eliminazione). I container sono isolati ma condividono risorse con l'host e possono essere connessi a reti e volumi.
@@ -80,7 +80,7 @@ L'**architettura di Docker** si basa su alcuni elementi chiave che lavorano insi
 
 ---
 
-## **Esercitazione 1: Primi Passi con Docker**
+## Esercitazione 1: Primi Passi con Docker
 Questa esercitazione ti introdurrà all'installazione e all'esecuzione dei primi comandi Docker. Assicurati di avere un ambiente Alpine Linux pronto (che trovate già pronto nella dir `machine` - usate `alpineNAT`).
 
 - Assicurati di soddisfare i **requisiti di sistema**: Alpine Linux 3.13+, Kernel 3.10+, accesso root/sudo, connessione internet.
@@ -158,14 +158,7 @@ Questa esercitazione ti introdurrà all'installazione e all'esecuzione dei primi
 
 ---
 
-Perfetto, adesso completo l’indentazione anche della parte che mi hai segnalato, mantenendo **coerenza** con lo stile che abbiamo già usato:  
-(lista -> sotto-punti -> esempi -> codice -> spiegazioni, sempre scalando con 2 o 4 spazi).
-
-Ecco il tuo testo **completamente indendato** e sistemato:
-
----
-
-# **Esercitazione 2: Creazione e Gestione di Immagini Docker**
+# Esercitazione 2: Creazione e Gestione di Immagini Docker
 
 Questa esercitazione si concentra sulla creazione di **immagini Docker personalizzate** utilizzando i **Dockerfile**.
 
@@ -319,7 +312,7 @@ CMD [ "npm", "start" ]
 
 ---
 
-# **Esercitazione 3: Networking e Persistenza dei Dati con Docker**
+# Esercitazione 3: Networking e Persistenza dei Dati con Docker
 
 Questa esercitazione si concentra su due aspetti fondamentali di Docker:
 
