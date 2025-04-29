@@ -1,5 +1,26 @@
 # Virtualizzazione
+
 ## Indice
+
+1. 🧠 **Cosa sono le macchine virtuali (VM)?**  
+2. ⚙️ **Architettura: livelli di virtualizzazione**  
+   2.1. 🧱 Hardware (Host)  
+   2.2. 🎛️ Hypervisor  
+   2.3. 💻 Macchine virtuali  
+3. 🧰 **Tipi di hypervisor**  
+   3.1. 🔹 Hypervisor di tipo 1 (bare-metal)  
+   3.2. 🔹 Hypervisor di tipo 2 (hosted)  
+4. 🔄 **Come le risorse vengono virtualizzate**  
+   4.1. 🧠 CPU  
+   4.2. 🧮 RAM  
+   4.3. 💾 Disco  
+   4.4. 🌐 Schede di rete  
+5. 🌍 **Modalità di rete delle VM**  
+   5.1. 🔹 NAT  
+   5.2. 🔹 Bridge  
+   5.3. 🔹 Host-Only  
+   5.4. 🔹 Internal Network  
+6. 🎯 **Conclusioni**  
 
 ## 🧠 COSA SONO LE MACCHINE VIRTUALI (VM)?
 
