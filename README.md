@@ -11,6 +11,9 @@ Nel contesto dello sviluppo software, l'uso di **Docker** e delle **Macchine Vir
 - [Vantaggi di Docker](DockerContainerizzazione.md)
 - [Guida pratica a Docker](DockerContainerizzazione.md)
 
+![image](https://github.com/user-attachments/assets/11ab94c9-258c-4591-9af1-5a063c1b630a)
+
+
 ## Cos'è una Macchina Virtuale?
 
 Una **Macchina Virtuale (VM)** è una simulazione di un sistema fisico, che esegue un sistema operativo completo, chiamato *sistema operativo guest*, sopra un sistema operativo host. Le VM sono isolate dal sistema fisico, ma richiedono risorse hardware dedicate, come CPU, memoria e spazio su disco, per funzionare correttamente. Le macchine virtuali sono più pesanti rispetto ai container, ma offrono una maggiore compatibilità con applicazioni che necessitano di un sistema operativo completo.
@@ -19,6 +22,8 @@ Una **Macchina Virtuale (VM)** è una simulazione di un sistema fisico, che eseg
 - [Cos'è una Macchina Virtuale?](MacchineVirtuali.md)
 - [Differenze tra Docker e Macchine Virtuali](MacchineVirtuali.md)
 - [Vantaggi e svantaggi delle Macchine Virtuali](MacchineVirtuali.md)
+
+![image](https://github.com/user-attachments/assets/b3d734e4-6b76-4bdd-83e1-756cf6fe1d34)
 
 ## Confronto tra Docker e Macchine Virtuali
 
@@ -30,6 +35,8 @@ Sebbene entrambe le tecnologie abbiano lo scopo di isolare applicazioni e ambien
 | **Peso**                     | Molto leggero, risorse condivise  | Più pesante, risorse dedicate   |
 | **Avvio**                     | Molto rapido                      | Più lento                       |
 | **Portabilità**               | Altamente portabile               | Meno portabile, dipende dall'hardware |
+
+![images](https://github.com/user-attachments/assets/eaaa0ad3-b631-4b55-bcf3-619da5ddef7a)
 
 ### Per ulteriori dettagli sul confronto:
 - [Docker vs Macchine Virtuali: un confronto approfondito](DockerContainerizzazione.md)
