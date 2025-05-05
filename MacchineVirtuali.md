@@ -7,7 +7,8 @@
 3. 🧰 **Tipi di hypervisor**
 4. 🔄 **Come vengono virtualizzate le risorse**
 5. 🌐 **Reti virtuali e modalità di connessione**
-6. 🎯 **Conclusioni**
+6. ✅ **Vantaggi e ❌ Svantaggi**
+7. 🎯 **Conclusioni**
 
 ---
 
@@ -152,7 +153,47 @@ Rete esclusiva tra VM sullo stesso host. Utile per cluster di VM e testing di se
 
 ---
 
-## 6. 🎯 Conclusioni
+## 7. ✅ Vantaggi e ❌ Svantaggi
+
+### ✅ Vantaggi
+
+* **Isolamento completo**
+  Ogni VM è separata dalle altre e dall’host, per cui crash, malfunzionamenti o attacchi in una VM non si ripercuotono sul sistema fisico né sulle altre macchine virtuali.
+
+* **Consolidamento e ottimizzazione dell’hardware**
+  Più carichi di lavoro possono girare sullo stesso server fisico, incrementando l’utilizzo delle risorse e riducendo i costi di infrastruttura.
+
+* **Flessibilità operativa**
+  Creazione, clonazione, snapshot e ripristino di VM in modo rapido, semplificando backup, test e deployment di ambienti omogenei.
+
+* **Portabilità e scalabilità**
+  VM facilmente “trasportabili” tra host fisici o cloud diversi, garantendo migrazioni live (vMotion, Live Migration) e autoscaling in ambienti virtualizzati.
+
+* **Provisioning rapido**
+  Possibilità di distribuire nuove VM in pochi minuti, automatizzando interi stack applicativi con tool di orchestrazione (es. Terraform, Ansible, Kubernetes).
+
+### ❌ Svantaggi
+
+* **Overhead di prestazioni**
+  L’hypervisor introduce uno strato di astrazione che può comportare latenze e un utilizzo di risorse leggermente superiore rispetto al bare-metal.
+
+* **Gestione complessa**
+  Infrastrutture di virtualizzazione molto ampie richiedono strumenti avanzati di monitoraggio, orchestration e capacity planning per evitare “VM sprawl” e disallineamenti di risorse.
+
+* **Licensing e costi software**
+  Alcuni hypervisor commerciali e tool di gestione (vCenter, SCVMM) comportano licenze costose; inoltre, software guest come Windows Server possono richiedere ulteriori permessi.
+
+* **Security boundary condivisa**
+  Sebbene isolata, la sicurezza dipende dall’hypervisor: vulnerabilità a livello di virtualizzazione possono potenzialmente compromettere più VM contemporaneamente.
+
+* **Dipendenza dall’hardware**
+  Caratteristiche avanzate (SR-IOV, nested virtualization, offload) richiedono CPU, chipset e storage controller compatibili, e un firmware aggiornato.
+
+![image](https://github.com/user-attachments/assets/da6a179e-d85f-4ed2-bdce-7e7b9f0af02f)
+
+---
+
+## 7. 🎯 Conclusioni
 
 La virtualizzazione consente di massimizzare l’efficienza hardware, garantire isolamento e flessibilità e ridurre i costi operativi. Scegliere il giusto hypervisor, configurare correttamente risorse e reti virtuali, sono gli elementi chiave per un’infrastruttura robusta e scalabile.
 
