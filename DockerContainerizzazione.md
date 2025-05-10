@@ -177,155 +177,121 @@ Questa esercitazione ti introdurrà all'installazione e all'esecuzione dei primi
 
 # Esercitazione 2: Creazione e Gestione di Immagini Docker
 
-Questa esercitazione si concentra sulla creazione di **immagini Docker personalizzate** utilizzando i **Dockerfile**.
-
 ## 1. Introduzione ai Dockerfile
 
-- Un **Dockerfile** è un file di testo contenente una serie di **istruzioni per costruire un'immagine Docker in modo automatizzato**.
-- La prima istruzione non commentata deve essere **FROM**, che definisce l'**immagine base** da cui partire.
-- Altre istruzioni principali includono:
-  - **RUN**: Esegue comandi all'interno del container durante la fase di build (ogni `RUN` crea un nuovo layer).
-  - **COPY**: Copia file e directory locali nell'immagine.
-  - **ADD**: Simile a `COPY`, ma può anche estrarre archivi e scaricare file da URL.
-  - **WORKDIR**: Imposta la directory di lavoro per le istruzioni successive.
-  - **ENV**: Imposta variabili d'ambiente.
-  - **EXPOSE**: Indica le porte che il container ascolterà a runtime (non le pubblica effettivamente).
-  - **CMD**: Specifica il comando predefinito da eseguire all'avvio del container (può essere sovrascritto).
-  - **ENTRYPOINT**: Specifica l'eseguibile principale del container (più difficile da sovrascrivere di `CMD`).
-  - **VOLUME**: Crea un punto di montaggio per volumi esterni.
-  - **USER**: Imposta l'utente per eseguire i comandi successivi e il container.
+* Un **Dockerfile** è un file di testo che contiene una sequenza di istruzioni per costruire un'immagine Docker in modo **automatico e ripetibile**.
+* L'istruzione iniziale dev'essere **FROM**, che definisce l'**immagine base**.
+* Le istruzioni Dockerfile più comuni sono:
 
-![image](https://github.com/user-attachments/assets/10ccb528-728e-4c9b-b133-993245f2c0df)
+  * **FROM**: Definisce l'immagine di partenza.
+  * **RUN**: Esegue comandi durante la build.
+  * **COPY** e **ADD**: Copiano file nel container.
+  * **WORKDIR**: Imposta la directory di lavoro.
+  * **ENV**: Definisce variabili d'ambiente.
+  * **EXPOSE**: Indica le porte usate dal container.
+  * **CMD**/**ENTRYPOINT**: Comando da eseguire quando il container parte.
+  * **VOLUME**: Crea punti di montaggio per dati persistenti.
 
 ---
 
-## 2. Creazione di un Dockerfile per un'Applicazione Node.js Semplice
+## 2. Preparazione di una Directory per Node-RED
 
-### Crea una directory per l'applicazione
+### Crea la directory di progetto
 
-Apri il terminale e crea una cartella, ad esempio:
+Apri il terminale e crea una cartella dove inseriremo il `Dockerfile`:
 
 ```bash
-mkdir mia-app-node
-cd mia-app-node
+mkdir nodered-alpine
+cd nodered-alpine
 ```
 
-### Crea il file `package.json`
+### Crea un file `.dockerignore`
 
-Dentro la directory, crea un file `package.json` con questo contenuto base:
+Per evitare di includere file inutili nella build:
 
-```json
-{
-  "name": "mia-app-node",
-  "version": "1.0.0",
-  "description": "Una semplice applicazione Node.js",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  }
-}
-```
-*(Qui usiamo `express` per creare un server HTTP velocemente.)*
-
-### Crea il file `app.js`
-
-Ora crea `app.js` con un semplice server Express:
-
-```javascript
-const express = require('express');
-const app = express();
-const port = 3000;
-
-app.get('/', (req, res) => {
-  res.send('Ciao dal container Docker!');
-});
-
-app.listen(port, () => {
-  console.log(`App in ascolto su http://localhost:${port}`);
-});
+```bash
+echo "node_modules\nnpm-debug.log" > .dockerignore
 ```
 
-### Crea il file `.dockerignore`
+---
 
-> Importantissimo per non mandare file inutili nella build!  
-> Crea un file `.dockerignore` con dentro ad esempio:
-> 
-> ```
-> node_modules
-> npm-debug.log
-> ```
-> 
-> Così Docker non includerà la cartella `node_modules` (che verrà ricreata nel container) e i file di log.
+## 3. Creazione del Dockerfile per Node-RED
 
-### Crea il file `Dockerfile`
+### Crea un file `Dockerfile`
 
-Nella stessa directory crea un file chiamato `Dockerfile` con un contenuto simile a questo:
+All'interno della directory, crea un file `Dockerfile` con il contenuto seguente:
 
-```dockerfile
+```Dockerfile
 FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-EXPOSE 3000
-CMD [ "npm", "start" ]
+
+# Installa strumenti di compilazione necessari per alcuni node
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    bash
+
+# Installa Node-RED
+RUN npm install -g --unsafe-perm node-red
+
+# Crea una cartella per i flussi
+WORKDIR /data
+
+# Espone la porta 1880 usata da Node-RED
+EXPOSE 1880
+
+# Comando di avvio
+CMD ["node-red"]
 ```
 
-- **Spiegazione delle istruzioni**:
-  - `FROM node:18-alpine`: Utilizza l'immagine ufficiale Node.js basata su Alpine Linux come immagine base.
-  - `WORKDIR /app`: Imposta `/app` come directory di lavoro all'interno del container.
-  - `COPY package*.json ./`: Copia i file `package.json` e `package-lock.json` (se presente) nella directory `/app`.
-  - `RUN npm install`: Installa le dipendenze Node.js.
-  - `COPY . .`: Copia il resto dei file dell'applicazione nella directory `/app`.
-  - `EXPOSE 3000`: Indica che l'applicazione ascolterà sulla porta 3000.
-  - `CMD [ "npm", "start" ]`: Specifica il comando per avviare l'applicazione.
+### Spiegazione delle istruzioni
+
+* `FROM node:18-alpine`: Usa un'immagine base leggera con Node.js.
+* `apk add`: Installa tool di sistema essenziali per compilare eventuali dipendenze.
+* `npm install -g node-red`: Installa Node-RED globalmente.
+* `WORKDIR /data`: Imposta la directory dove Node-RED salva i flussi.
+* `EXPOSE 1880`: Porta su cui gira l'interfaccia web di Node-RED.
+* `CMD ["node-red"]`: Avvia Node-RED all'avvio del container.
 
 ---
 
-## 3. Costruzione dell'Immagine Docker
+## 4. Costruzione dell’Immagine Docker
 
-- Naviga nella directory contenente il `Dockerfile` e la tua applicazione.
-- Esegui il comando `docker build`:
+Dalla directory in cui si trova il Dockerfile, esegui:
 
-  ```bash
-  docker build -t my-nodejs-app:1.0 .
-  ```
+```bash
+docker build -t my-nodered-alpine .
+```
 
-  - `-t my-nodejs-app:1.0`: Assegna un nome (`my-nodejs-app`) e un tag (`1.0`) all'immagine.
-  - `.`: Specifica il contesto di build (la directory corrente).
+* `-t my-nodered-alpine`: Dai un nome all’immagine.
+* `.`: Usa la directory corrente come contesto di build.
 
-- Verifica che l'immagine sia stata creata con:
+Verifica che l'immagine sia stata creata:
 
-  ```bash
-  docker images
-  ```
+```bash
+docker images
+```
 
 ---
 
-## 4. Esecuzione di un Container dall'Immagine
+## 5. Avvio del Container Node-RED
 
-- Esegui un container basato sulla tua immagine:
+Esegui il container:
 
-  ```bash
-  docker run -d -p 8080:3000 my-nodejs-app:1.0
-  ```
+```bash
+docker run -d -p 1880:1880 --name nodered my-nodered-alpine
+```
 
-  - `-p 8080:3000`: Mappa la porta 3000 del container alla porta 8080 dell'host.
+* `-p 1880:1880`: Espone la porta web di Node-RED.
+* `--name nodered`: Dai un nome al container.
 
-- Verifica che l'applicazione funzioni aprendo un browser su:
+Apri il browser su:
 
-  ```
-  http://localhost:8080
-  ```
+```
+http://localhost:1880
+```
 
-- Visualizza i log del container:
-
-  ```bash
-  docker logs <ID_DEL_CONTAINER>
-  ```
+Dovresti vedere l'interfaccia di Node-RED pronta per l'uso.
 
 ---
 
