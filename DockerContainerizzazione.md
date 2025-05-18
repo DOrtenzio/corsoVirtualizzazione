@@ -456,6 +456,10 @@ docker exec nome_container comando
 
 # Creare e avviare un nuovo container in background
 docker run -d --name mio_container nginx
+
+#Avvio automatico del container all'avvio della macchina virtuale
+docker run --restart=always -d --name mio_container nginx
+
 ```
 
 ---
