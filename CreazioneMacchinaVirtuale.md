@@ -150,6 +150,12 @@ Poi riavvia il networking:
 
 ---
 
+> ### NB: In caso di ssh ripetuto sulla stessa porta in Windows dovrai eliminare l'host conosciuto per l'ssh su quella porta
+
+```sh
+notepad "C:\Users\D'ortenzio\.ssh\known_hosts"
+```
+
 ## ✅ Conclusione
 
 Hai ora una VM Alpine Linux minimal ma potente, pronta per lo sviluppo, test di server o container.
