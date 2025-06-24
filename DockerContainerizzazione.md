@@ -376,19 +376,17 @@ networks:
     driver: bridge
 ```
 
-- **`depends_on`** garantisce l’ordine di avvio (ma non verifica che Redis sia “pronto”: per quello servono _healthchecks_).
-- Tutti i container finiscono sulla rete `my-app-net` e si scambiano richieste via DNS interno.
-
----
-
 ### 3. Persistenza dei Dati con Volumi Docker
 
 #### **Concetti teorici**
-- I **container** sono basati su file system **copy-on-write** e sono per definizione **stateless**: quando lo elimini, tutto dentro scompare.
+In Docker, un **volume** è un meccanismo per gestire e conservare dati persistenti usati dai container.
 - I **volumi** sono gestiti dal demone Docker:
   - Risiedono fuori dal file system di ogni singolo container.
   - Hanno un driver (di default `local`): puoi anche usare driver remoti o cifrati.
   - Sono indipendenti dal ciclo di vita dei container: restano esistenti finché non li cancelli esplicitamente.
+**Vantaggi**
+  - Se elimini e ricrei il container, i dati restano intatti.  
+  - Puoi collegare lo stesso volume a più container di backup, analisi, migrazione, ecc.
 
 #### **Creazione e utilizzo di un volume**
 1. **Crea il volume**  
@@ -403,17 +401,7 @@ networks:
      postgres:15-alpine
    ```
    - `/var/lib/postgresql/data` è il path interno in cui PostgreSQL salva i dati.
-3. **Vantaggi**  
-   - Se elimini e ricrei il container, i dati restano intatti.  
-   - Puoi collegare lo stesso volume a più container di backup, analisi, migrazione, ecc.
-
-#### **Bind mount vs Volume**
-- **Volume**  
-  - Gestito da Docker, portabile e più performante su Linux.  
-  - Non dipende da percorsi host espliciti.
-- **Bind mount**  
-  - Mappa una cartella qualsiasi dell’host (`/home/user/data`) dentro il container.  
-  - Utile in sviluppo (vedi live-reload dei sorgenti), ma meno portable e potenzialmente meno safe (dipende da permessi host).
+  
 ---
 ## Comandi Utili
 
