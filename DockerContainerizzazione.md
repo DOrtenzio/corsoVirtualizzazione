@@ -305,76 +305,81 @@ Questa esercitazione si concentra su due aspetti fondamentali di Docker:
 ---
 
 ### 1. Networking Docker
+### **Namespace di rete**
+Docker crea uno spazio di rete isolato per ogni rete che definisci. 
+È utile per:
+* evitare che container di reti diverse si vedano tra loro;
+* garantire sicurezza e controllo.
 
-#### **Concetti teorici**
-- **Namespace di rete**: ogni rete Docker crea un “namespace” isolato, cioè un piccolo mondo virtuale in cui i container possono avere interfacce, tabelle di routing e firewall indipendenti dall’host o da altre reti.
-- **Isolamento e sicurezza**: scegliendo reti diverse si controlla chi può scoprire e raggiungere chi. Questo è alla base dell’architettura “zero trust”: di default un container su una rete non vede gli altri sulle reti diverse.
-
-#### **Reti predefinite**
-- **bridge**  
-  - È la rete “di casa” di Docker.  
-  - Ogni container lanciato senza specificare rete finisce qui.  
-  - I container su `bridge` possono comunicare tra loro usando IP privati, ma per collegarsi dall’esterno serve il _port mapping_.
-- **host**  
-  - Il container condivide **tutto** lo stack di rete dell’host: stessa interfaccia di rete, stessi IP e porte.  
-  - Vantaggio: latenza minima, nessun NAT.  
-  - Svantaggio: nessun isolamento (quindi da usare con cautela).
-- **none**  
-  - Il container non ha alcuna interfaccia di rete.  
-  - Serve per scenari ultra-isolati, dove la rete non serve o viene gestita esternamente.
-
-#### **Reti personalizzate**
-- Creando una rete di tipo _bridge_ custom si ottiene:
-  - **DNS interno**: i container si scoprono per nome (es. `redis`, `web`).
-  - **Maggiore isolamento**: solo chi è collegato a quella rete può comunicare.
-- Comando di base:
-  ```bash
-  docker network create my-network
-  ```
-- Esempio di avvio:
-  ```bash
-  docker run -d --name my-app   --network my-network my-nodejs-app:1.0
-  docker run -d --name my-postgres --network my-network postgres:15-alpine
-  ```
-  – Ora `my-app` può raggiungere il database all’hostname `my-postgres` senza configurare IP.
-
-#### **Esposizione di porte**
-- To expose a service outside the host, si usa:
-  ```bash
-  docker run -p <porta_host>:<porta_container> ...
-  ```
-- Teoria del NAT: Docker crea regole iptables sull’host che mappano `host:porta_host` → `container_ip:porta_container`.
+> Questo approccio supporta l'idea di "zero trust", cioè: *“nessuno si fida di nessuno finché non lo autorizzi esplicitamente.”*
 
 ---
 
-### 2. Comunicazione tra Container in Rete (con Docker Compose)
+## **Reti predefinite di Docker**
 
-#### **Concetti teorici**
-- **Orchestrazione leggera**: Docker Compose permette di descrivere in un unico YAML più servizi, reti e volumi, e di avviarli/fermarli insieme.
-- **Service discovery**: grazie alla rete Compose, ogni servizio è raggiungibile col nome definito sotto `services:`.
+| Tipo rete          | Caratteristiche                                                                 |
+| ------------------ | ------------------------------------------------------------------------------- | 
+| `bridge` (default) | I container comunicano tra loro con IP privati. Da fuori serve il port mapping. | 
+| `host`             | Il container usa direttamente la rete dell’host (stesso IP e porte).            |
+| `none`             | Il container non ha rete.                                                       | 
 
-#### **Esempio base (`docker-compose.yml`)**
+> Ovviamente si potranno creare reti custom, ma ciò non è oggetto del nostro approfondimento.
+
+---
+
+## **Esposizione di porte verso l’esterno**
+
+Se vuoi che qualcosa sia accessibile **da fuori Docker**, devi fare il **port mapping**:
+
+```bash
+docker run -p 8080:3000 my-app
+```
+
+Significa:
+> quando qualcuno accede a `localhost:8080` → Docker lo inoltra al container sulla porta `3000`.
+
+Questo usa regole **NAT** (Network Address Translation) dietro le quinte: Docker configura il firewall (`iptables`) dell’host per fare il collegamento.
+
+---
+
+## 2. **Comunicazione tra container con Docker Compose**
+
+### **Cos’è Docker Compose?**
+
+Uno strumento per:
+* definire più container (servizi) in un file `.yml`
+* gestirli insieme (start, stop, logs...)
+
+> Anziché lanciare tanti comandi `docker run ...` uno per uno, descrivi tutto in un unico file, e poi usi un solo comando per avviare tutto il tuo progetto.
+
+### Esempio base:
+
+`docker-compose.yml`
+
 ```yaml
-version: '3.8'
+version: "3"
 services:
-  redis:
-    image: redis:alpine
-    networks:
-      - my-app-net
-
   web:
-    image: your-node-app-image:latest
+    image: my-nodejs-app:1.0
     ports:
       - "8080:3000"
-    networks:
-      - my-app-net
-    depends_on:
-      - redis
-
-networks:
-  my-app-net:
-    driver: bridge
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: secret
 ```
+
+Quando esegui:
+
+```bash
+docker compose up
+```
+
+Docker avvierà tutti i servizi evitandoci l'avvio manuale di tutti i container, che in questo caso esempio sono pochi.
+
+Ad esempio, l'app `web` potrà connettersi a `db:5432`.
+
+---
 
 ### 3. Persistenza dei Dati con Volumi Docker
 
